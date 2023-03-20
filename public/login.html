@@ -11,27 +11,17 @@
       integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
       crossorigin="anonymous"
     />
-    <title>SignUp to ExpenseTracker</title>
+    <title>Login | ExpenseTracker</title>
   </head>
   <body>
     <section id="Signup-Section">
-      <form method="POST" id="signup-form">
-        <h2 style="text-align: center; padding: 20px">Signup Now</h2>
-        <div class="form-group">
-          <label for="Username">Username</label>
-          <input
-            type="username"
-            name="username"
-            class="form-control"
-            aria-describedby="emailHelp"
-            required
-          />
-        </div>
+      <form action="/user/signup" method="POST" id="signup-form">
+        <h2 style="text-align: center; padding: 20px">Login Now</h2>
         <div class="form-group">
           <label for="Email">Email address</label>
           <input
             type="email"
-            name="email"
+            name="emailId"
             class="form-control"
             aria-describedby="emailHelp"
             required
@@ -41,22 +31,15 @@
           <label for="Password1">Password</label>
           <input
             type="password"
-            name="upassword"
+            name="password"
             class="form-control"
             required
           />
         </div>
-        <button
-          onclick="showuserDetails();"
-          type="submit"
-          class="btn btn-primary"
-        >
+        <button onclick="signupUser();" type="submit" class="btn btn-primary">
           Submit
         </button>
       </form>
     </section>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
-    <script src="signup.js"></script>
   </body>
 </html>
