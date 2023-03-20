@@ -41,7 +41,8 @@ exports.postuserLogin = async (req, res, next) => {
   if (registeruserExist && registeruserExist.length) {
     bcrypt.compare(password, registeruserExist[0].password, (err, result) => {
       if (result == true) {
-        res.status(201).json({ successMsg: "User logged in successfully" });
+        // res.status(201).json({ successMsg: "User logged in successfully" });
+        res.status(201).redirect("/insert-expense");
       } else {
         res
           .status(401)
