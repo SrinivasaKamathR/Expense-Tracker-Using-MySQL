@@ -15,6 +15,7 @@ async function signUp(event) {
     console.log(res.data.token);
     localStorage.setItem("token", res.data.token);
     if (res.status == 201) {
+      localStorage.setItem("user", false);
       window.location.href = "./expense.html";
     }
   } catch (error) {

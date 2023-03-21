@@ -14,6 +14,17 @@ router.get(
   expenseControls.getExpenses
 );
 
+router.get(
+  "/premiums",
+  userAuthentication.authenticate,
+  expenseControls.getAllUsers
+);
+router.get(
+  "/getInfo/:clickedUserId",
+  userAuthentication.authenticate,
+  expenseControls.getInfoForPremiumUsers
+);
+
 router.post(
   "/delete-expense/:expenseId",
   userAuthentication.authenticate,

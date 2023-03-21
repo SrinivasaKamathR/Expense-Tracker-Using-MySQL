@@ -1,4 +1,3 @@
-const token = localStorage.getItem("token");
 async function addExpense(event) {
   event.preventDefault();
   const expenseAmt = event.target.expenseAmt.value;
@@ -11,14 +10,16 @@ async function addExpense(event) {
     category,
   };
   try {
+    const token = localStorage.getItem("token");
     const res = await axios.post(
       "http://localhost:3000/insert-expense",
       expenseDetails,
       { headers: { Authorization: token } }
     );
+    console.log(res);
     if (res.status == 201) {
       window.location.href = "./expense.html";
-      showexpenseonScreen(res);
+      showexpenseonScreen(res.data);
     }
   } catch (error) {
     console.log(error);
@@ -27,14 +28,17 @@ async function addExpense(event) {
 
 window.addEventListener("DOMContentLoaded", async function () {
   try {
+    const token = localStorage.getItem("token");
     const res = await axios.get("http://localhost:3000/get-expenses", {
       headers: { Authorization: token },
     });
-    if (res.data) {
+    if (res.status == 200) {
+      console.log(checkIfPremium);
       for (let i = 0; i < res.data.length; i++) {
         showexpenseonScreen(res.data[i]);
       }
     }
+    checkIfPremium();
   } catch (error) {
     console.log(error);
   }
@@ -56,6 +60,7 @@ function editExpense(expenseId, category, expenseAmt, desc) {
 }
 async function deleteExpense(expenseId) {
   try {
+    const token = localStorage.getItem("token");
     const res = await axios.delete(
       `http://localhost:3000/expense/delete-expense/${expenseId}`,
       { headers: { Authorization: token } }
@@ -79,7 +84,17 @@ function premiumUser() {
   document.body.classList.add("dark");
 }
 
+function checkIfPremium() {
+  let usertype = localStorage.getItem("user");
+
+  if (usertype === "true") {
+    premiumUser();
+    getPremiumLeaderboard();
+  }
+}
+
 document.getElementById("premium-btn").onclick = async function (e) {
+  const token = localStorage.getItem("token");
   const response = await axios.get(
     "http://localhost:3000/purchase/premiummembership",
     { headers: { Authorization: token } }
@@ -110,7 +125,9 @@ document.getElementById("premium-btn").onclick = async function (e) {
           { headers: { Authorization: token } }
         )
         .then(() => {
+          localStorage.setItem("user", true);
           premiumUser();
+          getPremiumLeaderboard();
           alert("You are a Premium User Now");
         })
         .catch(() => {
@@ -132,3 +149,51 @@ document.getElementById("premium-btn").onclick = async function (e) {
     alert(response.error.metadata.payment_id);
   });
 };
+
+async function getPremiumLeaderboard() {
+  const token = localStorage.getItem("token");
+  try {
+    const response = await axios.get("http://localhost:3000/premiums", {
+      headers: { Authorization: token },
+    });
+
+    if (response.data.success) {
+      console.log(response);
+      if (response.data.data.length > 0) {
+        response.data.data.sort((a, b) => {
+          return a.totalExpense - b.totalExpense;
+        });
+        console.log(response.data.data[0].user.username);
+        console.log(response.data.data[0].user);
+
+        response.data.data.map((user, id) => {
+          console.log(id);
+          showLeaderboard(user, id);
+        });
+      }
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+function showLeaderboard(user, id) {
+  console.log(id);
+  console.log(user);
+  const leaderboardDiv = document.getElementById("leaderboardDiv");
+  let child = `<li class="leaderboardList">
+          <p class="sno">${id + 1} </p>
+          <p class="name" id="user" onclick="openUserExpenses('${
+            user.user.id
+          }')">${user.user.username}</p>
+          <p class="name">${user.totalExpense}</p>
+  </li>`;
+
+  leaderboardDiv.innerHTML += child;
+}
+
+function openUserExpenses() {
+  console.log(user);
+  localStorage.setItem("clickedUser", user);
+  window.location.href = "./leaderboard.html";
+}

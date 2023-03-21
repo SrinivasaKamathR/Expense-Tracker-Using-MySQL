@@ -36,6 +36,7 @@ const updateTransactionStatus = (req, res) => {
         order
           .update({ paymentid: payment_id, status: "SUCCESSFUL" })
           .then(() => {
+            req.user.update({ ispremiumuser: true });
             return res
               .status(202)
               .json({ sucess: true, message: "Transaction Successful" });

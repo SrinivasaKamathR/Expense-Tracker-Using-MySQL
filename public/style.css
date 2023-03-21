@@ -69,7 +69,7 @@ body {
 
 .expense-list-item {
     list-style-type: none;
-    color:black;
+    color:rgb(223, 31, 31);
     font-weight: 600;
 }
 
@@ -105,4 +105,16 @@ body {
 #premium-btn:hover {
     color: #36768b;
     background-color: #fff;
+}
+
+
+.expense-container{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    grid-auto-rows: minmax(100px, auto);
+}
+
+.leaderboardList {
+    list-style: none;
 }
